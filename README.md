@@ -20,9 +20,8 @@ This project provides a comprehensive practice shell for 42 School examinations,
 .
 ├── exam.sh           # Main entry point
 ├── Makefile          # Build configuration
-├── .gitignore        # Git ignore rules
 ├── README.md         # This file
-└── .resources/       # Practice materials (not tracked by git)
+└── .resources/       # Practice materials
     ├── main/         # Main menu and interface
     ├── rank02/       # Rank 02 exam exercises
     ├── rank03/       # Rank 03 exam exercises
