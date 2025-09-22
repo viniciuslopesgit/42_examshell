@@ -42,7 +42,7 @@ case $opt in
         bash menu.sh
         exit 1
         ;;
-    6)
+    7)
         cd ../../
         bash update.sh
         ;;
