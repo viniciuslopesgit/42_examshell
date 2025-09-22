@@ -10,13 +10,24 @@ base_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 # Centralized temp file to track subject
 subject_file="/tmp/.current_subject_${rank}_${level}"
 
-# Define subject pool
-declare -A subjects
-subjects[level1]="broken_gnl filter scanf"
-subjects[level2]="n_queens permutations powerset rip tsp"
+# Define subject pool using case statement instead of associative array
+get_subjects() {
+    case "$level" in
+        level1)
+            echo "broken_gnl filter scanf"
+            ;;
+        level2)
+            echo "n_queens permutations powerset rip tsp"
+            ;;
+        *)
+            echo ""
+            ;;
+    esac
+}
 
 pick_new_subject() {
-    IFS=' ' read -r -a qsub <<< "${subjects[$level]}"
+    subjects_list=$(get_subjects)
+    IFS=' ' read -r -a qsub <<< "$subjects_list"
     count=${#qsub[@]}
     random_index=$(( RANDOM % count ))
     chosen="${qsub[$random_index]}"

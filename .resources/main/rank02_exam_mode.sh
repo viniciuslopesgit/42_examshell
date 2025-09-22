@@ -10,15 +10,30 @@ base_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 # Centralized temp file to track subject
 subject_file="/tmp/.current_subject_${rank}_${level}"
 
-# Define subject pool
-declare -A subjects
-subjects[level0]="first_word fizzbuzz ft_putstr ft_strcpy ft_strlen ft_swap repeat_alpha rev_print rot_13 rotone search_and_replace ulstr"
-subjects[level1]="alpha_mirror camel_to_snake print_bits do_op ft_atoi ft_strcmp reverse_bits ft_strrev ft_strcspn ft_strdup inter is_power_of_2 last_word max snake_to_camel swap_bits union wdmatch"
-subjects[level2]="add_prime_sum epur_str expand_str ft_list_size ft_atoi_base ft_range ft_rrange hidenp lcm paramsum pgcd print_hex rstr_capitalizer str_capitalizer tab_mult"
-subjects[level3]="flood_fill fprime ft_itoa ft_split rev_wstr rostring ft_list_foreach sort_int_tab sort_list ft_list_remove_if"
+# Define subject pool using case statement instead of associative array
+get_subjects() {
+    case "$level" in
+        level0)
+            echo "first_word fizzbuzz ft_putstr ft_strcpy ft_strlen ft_swap repeat_alpha rev_print rot_13 rotone search_and_replace ulstr"
+            ;;
+        level1)
+            echo "alpha_mirror camel_to_snake print_bits do_op ft_atoi ft_strcmp reverse_bits ft_strrev ft_strcspn ft_strdup inter is_power_of_2 last_word max snake_to_camel swap_bits union wdmatch"
+            ;;
+        level2)
+            echo "add_prime_sum epur_str expand_str ft_list_size ft_atoi_base ft_range ft_rrange hidenp lcm paramsum pgcd print_hex rstr_capitalizer str_capitalizer tab_mult"
+            ;;
+        level3)
+            echo "flood_fill fprime ft_itoa ft_split rev_wstr rostring ft_list_foreach sort_int_tab sort_list ft_list_remove_if"
+            ;;
+        *)
+            echo ""
+            ;;
+    esac
+}
 
 pick_new_subject() {
-    IFS=' ' read -r -a qsub <<< "${subjects[$level]}"
+    subjects_list=$(get_subjects)
+    IFS=' ' read -r -a qsub <<< "$subjects_list"
     count=${#qsub[@]}
     random_index=$(( RANDOM % count ))
     chosen="${qsub[$random_index]}"

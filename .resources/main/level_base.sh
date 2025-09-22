@@ -1,3 +1,4 @@
+#!/bin/bash
 source colors.sh
 
 rank=$1
