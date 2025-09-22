@@ -8,7 +8,7 @@ run_level() {
     echo "$(tput setaf 2)$(tput bold)Level $level is being prepared...$(tput sgr0)"
     display_animation
     clear
-    until bash rank04_exam_mode.sh rank04 level$level; do
+    until bash rank05_exam_mode.sh rank05 level$level; do
         echo "$(tput setaf 1)Test failed. Try again.$(tput sgr0)"
         read -p "Press Enter to retry Level $level..."
         clear
@@ -20,7 +20,7 @@ run_level() {
 start_exam() {
     clear
     bash label.sh
-    echo "$(tput setaf 2)$(tput bold)🧪 Welcome to the Rank04 Exam!$(tput sgr0)"
+    echo "$(tput setaf 2)$(tput bold)🧪 Welcome to the Rank05 Exam!$(tput sgr0)"
     echo "=================================================="
     sleep 1
 
@@ -30,7 +30,7 @@ start_exam() {
     done
 
     echo "=================================================="
-    echo "$(tput setaf 2)$(tput bold)🎉 Congratulations! You passed the Rank04 exam!$(tput sgr0)"
+    echo "$(tput setaf 2)$(tput bold)🎉 Congratulations! You passed the Rank05 exam!$(tput sgr0)"
     echo "=================================================="
 
     # Backup rendu folder
@@ -52,7 +52,7 @@ start_exam() {
         y|Y)
             echo -e "${YELLOW}🔄 Restarting the exam...${RESET}"
             sleep 1
-            bash rank04.sh
+            bash rank05.sh
             ;;
         *)
             echo -e "${GREEN}Goodbye!${RESET}"

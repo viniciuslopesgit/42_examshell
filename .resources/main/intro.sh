@@ -11,7 +11,8 @@ printf "${YELLOW}${BOLD}%s${RESET}\n" "🔄 1. Commands"
 printf "${YELLOW}${BOLD}%s${RESET}\n" "🚀 2. Exam Rank 02"
 printf "${YELLOW}${BOLD}%s${RESET}\n" "📋 3. Exam Rank 03"
 printf "${YELLOW}${BOLD}%s${RESET}\n" "📄 4. Exam Rank 04"
-printf "${YELLOW}${BOLD}%s${RESET}\n" "📁 5. Open Rendu Folder"
+printf "${YELLOW}${BOLD}%s${RESET}\n" "📄 5. Exam Rank 05"
+printf "${YELLOW}${BOLD}%s${RESET}\n" "📁 6. Open Rendu Folder"
 #printf "${YELLOW}${BOLD}%s${RESET}\n" "6. Update Shell"
 printf "${GREEN}%s${RESET}\n"  "◆◇◆◇◆◇◆◇◆◇◆◇◆◇◆◇◆◇◆◇◆◇◆◇◆◇◆◇◆◇◆◇◆◇◆◇◆◇◆◇◆◇◆◇◆◇◆◇◆◇◆◇◆◇◆◇◆"
 printf "${BLUE}%s${RESET}\n" "▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓"
@@ -32,6 +33,9 @@ case $opt in
         bash rank04_menu.sh
         ;;
     5)
+        bash rank05_menu.sh
+        ;;
+    6)
         cd ../../rendu
         open .
         cd ../.resources/main

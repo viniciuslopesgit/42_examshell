@@ -34,6 +34,11 @@ prepare_subject() {
         exit 1
     }
 
+    # Copy given.c file if it exists (mainly for level2 questions)
+    if [ -f "given.c" ]; then
+        cp "given.c" "$base_dir/../../rendu/$chosen/given.c"
+    fi
+
     clear
     echo -e "${CYAN}${BOLD}Your subject: $chosen${RESET}"
     echo "=================================================="

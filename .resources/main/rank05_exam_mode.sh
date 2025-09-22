@@ -12,10 +12,10 @@ subject_file="/tmp/.current_subject_${rank}_${level}"
 
 # Define subject pool
 declare -A subjects
-subjects[level0]="first_word fizzbuzz ft_putstr ft_strcpy ft_strlen ft_swap repeat_alpha rev_print rot_13 rotone search_and_replace ulstr"
-subjects[level1]="alpha_mirror camel_to_snake print_bits do_op ft_atoi ft_strcmp reverse_bits ft_strrev ft_strcspn ft_strdup inter is_power_of_2 last_word max snake_to_camel swap_bits union wdmatch"
-subjects[level2]="add_prime_sum epur_str expand_str ft_list_size ft_atoi_base ft_range ft_rrange hidenp lcm paramsum pgcd print_hex rstr_capitalizer str_capitalizer tab_mult"
-subjects[level3]="flood_fill fprime ft_itoa ft_split rev_wstr rostring ft_list_foreach sort_int_tab sort_list ft_list_remove_if"
+#subjects[level0]="first_word fizzbuzz ft_putstr ft_strcpy ft_strlen ft_swap repeat_alpha rev_print rot_13 rotone search_and_replace ulstr"
+subjects[level1]="bigint vect2"
+subjects[level2]="bsq life"
+#subjects[level3]="flood_fill fprime ft_itoa ft_split rev_wstr rostring ft_list_foreach sort_int_tab sort_list ft_list_remove_if"
 
 pick_new_subject() {
     IFS=' ' read -r -a qsub <<< "${subjects[$level]}"
@@ -27,7 +27,14 @@ pick_new_subject() {
 
 prepare_subject() {
     mkdir -p "$base_dir/../../rendu/$chosen"
-    touch "$base_dir/../../rendu/$chosen/$chosen.c"
+    touch "$base_dir/../../rendu/$chosen/$chosen.cpp"
+    
+    # Copy the .hpp file from the question folder to rendu
+    if [ -f "$base_dir/../$rank/$level/$chosen/$chosen.hpp" ]; then
+        cp "$base_dir/../$rank/$level/$chosen/$chosen.hpp" "$base_dir/../../rendu/$chosen/$chosen.hpp"
+    else
+        touch "$base_dir/../../rendu/$chosen/$chosen.hpp"
+    fi
 
     cd "$base_dir/../$rank/$level/$chosen" || {
         echo -e "${RED}Subject folder not found.${RESET}"
@@ -63,7 +70,7 @@ while true; do
             output=$(./tester.sh 2>&1)
             echo "$output" | tee tester_output.log
 
-            if echo "$output" | grep -q -E "PASSED|SUCCESS"; then
+            if echo "$output" | grep -q "PASSED"; then
                 echo -e "${GREEN}${BOLD}✔️  Passed!${RESET}"
                 rm -f "$subject_file"
                 sleep 1

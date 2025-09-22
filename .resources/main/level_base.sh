@@ -37,6 +37,15 @@ elif [[ "$rank" == "rank04" ]]; then
         echo "Invalid level: $level for rank04"
         exit 1
     fi
+elif [[ "$rank" == "rank05" ]]; then
+    if [[ "$level" == *"level1"* ]]; then
+        qsub=(bigint vect2)
+    elif [[ "$level" == *"level2"* ]]; then
+        qsub=(bsq life)
+    else
+        echo "Invalid level: $level for rank05"
+        exit 1
+    fi
 else
     echo "Invalid rank: $rank"
     exit 1
@@ -69,7 +78,26 @@ num=${#shuffled[@]}
 while true; do
     cd "../${shuffled[$i]}"
     mkdir -p "$base_dir/../../rendu/${shuffled[$i]}"
-    touch "$base_dir/../../rendu/${shuffled[$i]}/${shuffled[$i]}.c"
+    
+    # Create appropriate file extension based on rank
+    if [[ "$rank" == "rank05" ]]; then
+        touch "$base_dir/../../rendu/${shuffled[$i]}/${shuffled[$i]}.cpp"
+        
+        # Copy the .hpp file from the question folder to rendu
+        if [ -f "${shuffled[$i]}.hpp" ]; then
+            cp "${shuffled[$i]}.hpp" "$base_dir/../../rendu/${shuffled[$i]}/${shuffled[$i]}.hpp"
+        else
+            touch "$base_dir/../../rendu/${shuffled[$i]}/${shuffled[$i]}.hpp"
+        fi
+    elif [[ "$rank" == "rank04" && "$level" == *"level2"* ]]; then
+        # For rank04 level2, copy the given.c file if it exists
+        if [ -f "given.c" ]; then
+            cp "given.c" "$base_dir/../../rendu/${shuffled[$i]}/given.c"
+        fi
+        touch "$base_dir/../../rendu/${shuffled[$i]}/${shuffled[$i]}.c"
+    else
+        touch "$base_dir/../../rendu/${shuffled[$i]}/${shuffled[$i]}.c"
+    fi
     
     subject=$(cat sub.txt)
     if [ $i -eq $(($num)) ]; then

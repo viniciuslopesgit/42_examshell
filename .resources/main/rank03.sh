@@ -4,7 +4,7 @@ source colors.sh
 clear
 bash label.sh
 printf "${BLUE}%s${RESET}\n" "┌─────────────────────────────────────────────────────────┐"
-printf "${BLUE}%s${GREEN}%s${BLUE}%s${RESET}\n" "│" "  🎯 Choose your practice level for Exam 42 Rank 04  🎯  " "│"
+printf "${BLUE}%s${GREEN}%s${BLUE}%s${RESET}\n" "│" "  🎯 Choose your practice level for Exam 42 Rank 03  🎯  " "│"
 printf "${BLUE}%s${RESET}\n" "└─────────────────────────────────────────────────────────┘"
 printf "${CYAN}%s${RESET}\n" "∼∼∼∼∼∼∼∼∼∼∼∼∼∼∼∼∼∼∼∼∼∼∼∼∼∼∼∼∼∼∼∼∼∼∼∼∼∼∼∼∼∼∼∼∼∼∼∼∼∼∼∼∼∼∼∼∼"
 printf "${YELLOW}${BOLD}%s${RESET}\n" "🔥 1. Level1 - Intermediate Challenges"
