@@ -38,11 +38,13 @@ prepare_subject() {
     mkdir -p "$base_dir/../../rendu/$chosen"
     touch "$base_dir/../../rendu/$chosen/$chosen.cpp"
 
-    # Copy the .hpp file from the question folder to rendu
-    if [ -f "$base_dir/../$rank/$level/$chosen/$chosen.hpp" ]; then
-        cp "$base_dir/../$rank/$level/$chosen/$chosen.hpp" "$base_dir/../../rendu/$chosen/$chosen.hpp"
-    else
-        touch "$base_dir/../../rendu/$chosen/$chosen.hpp"
+    # Copy the .hpp file from the question folder to rendu only if it does not already exist
+    if [ ! -f "$base_dir/../../rendu/$chosen/$chosen.hpp" ]; then
+        if [ -f "$base_dir/../$rank/$level/$chosen/$chosen.hpp" ]; then
+            cp "$base_dir/../$rank/$level/$chosen/$chosen.hpp" "$base_dir/../../rendu/$chosen/$chosen.hpp"
+        else
+            touch "$base_dir/../../rendu/$chosen/$chosen.hpp"
+        fi
     fi
 
     # If polyset is selected for rank05 level1, copy subject folder files
