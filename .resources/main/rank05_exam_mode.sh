@@ -14,7 +14,7 @@ subject_file="/tmp/.current_subject_${rank}_${level}"
 get_subjects() {
     case "$level" in
         level1)
-            echo "bigint vect2"
+            echo "bigint polyset vect2"
             ;;
         level2)
             echo "bsq life"
@@ -37,12 +37,21 @@ pick_new_subject() {
 prepare_subject() {
     mkdir -p "$base_dir/../../rendu/$chosen"
     touch "$base_dir/../../rendu/$chosen/$chosen.cpp"
-    
+
     # Copy the .hpp file from the question folder to rendu
     if [ -f "$base_dir/../$rank/$level/$chosen/$chosen.hpp" ]; then
         cp "$base_dir/../$rank/$level/$chosen/$chosen.hpp" "$base_dir/../../rendu/$chosen/$chosen.hpp"
     else
         touch "$base_dir/../../rendu/$chosen/$chosen.hpp"
+    fi
+
+    # If polyset is selected for rank05 level1, copy subject folder files
+    if [[ "$rank" == "rank05" && "$level" == "level1" && "$chosen" == "polyset" ]]; then
+        src_subject_dir="$base_dir/../rank05/level1/polyset/subject"
+        dest_dir="$base_dir/../../rendu/polyset"
+        if [ -d "$src_subject_dir" ]; then
+            cp -r "$src_subject_dir"/* "$dest_dir/"
+        fi
     fi
 
     cd "$base_dir/../$rank/$level/$chosen" || {

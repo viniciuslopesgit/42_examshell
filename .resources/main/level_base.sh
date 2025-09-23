@@ -40,7 +40,7 @@ elif [[ "$rank" == "rank04" ]]; then
     fi
 elif [[ "$rank" == "rank05" ]]; then
     if [[ "$level" == *"level1"* ]]; then
-        qsub=(bigint vect2)
+        qsub=(bigint polyset vect2)
     elif [[ "$level" == *"level2"* ]]; then
         qsub=(bsq life)
     else
@@ -83,12 +83,21 @@ while true; do
     # Create appropriate file extension based on rank
     if [[ "$rank" == "rank05" ]]; then
         touch "$base_dir/../../rendu/${shuffled[$i]}/${shuffled[$i]}.cpp"
-        
+
         # Copy the .hpp file from the question folder to rendu
         if [ -f "${shuffled[$i]}.hpp" ]; then
             cp "${shuffled[$i]}.hpp" "$base_dir/../../rendu/${shuffled[$i]}/${shuffled[$i]}.hpp"
         else
             touch "$base_dir/../../rendu/${shuffled[$i]}/${shuffled[$i]}.hpp"
+        fi
+
+        # If polyset is selected for rank05 level1, copy subject folder files
+        if [[ "$level" == *"level1"* && "${shuffled[$i]}" == "polyset" ]]; then
+            src_subject_dir="$base_dir/../../rank05/level1/polyset/subject"
+            dest_dir="$base_dir/../../rendu/polyset"
+            if [ -d "$src_subject_dir" ]; then
+                cp -r "$src_subject_dir"/* "$dest_dir/"
+            fi
         fi
     elif [[ "$rank" == "rank04" && "$level" == *"level2"* ]]; then
         # For rank04 level2, copy the given.c file if it exists
