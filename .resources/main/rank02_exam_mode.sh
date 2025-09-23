@@ -97,7 +97,7 @@ while true; do
             ;;
         exit)
             echo "Exiting..."
-            exit 1
+            exit 0
             ;;
         *)
             echo "Please type 'test' to test code, 'next' for next or 'exit' for exit."

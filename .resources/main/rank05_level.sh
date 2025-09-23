@@ -23,7 +23,7 @@ case $opt in
         echo "$(tput setaf 2)$(tput bold)level1 is being prepared...$(tput sgr0)"
         display_animation
         clear
-        bash level_base.sh rank05 level1
+        bash rank05_level_base.sh rank05 level1
         ;;
     2) 
         mkdir ../../rendu
@@ -31,7 +31,7 @@ case $opt in
         echo "$(tput setaf 2)$(tput bold)level2 is being prepared...$(tput sgr0)"
         display_animation
         clear
-        bash level_base.sh rank05 level2
+        bash rank05_level_base.sh rank05 level2
         ;;
     exit)
         cd ../../../../

@@ -48,9 +48,9 @@ prepare_subject() {
     # If polyset is selected for rank05 level1, copy subject folder files
     if [[ "$rank" == "rank05" && "$level" == "level1" && "$chosen" == "polyset" ]]; then
         src_subject_dir="$base_dir/../rank05/level1/polyset/subject"
-        dest_dir="$base_dir/../../rendu/polyset"
+        dest_dir="$base_dir/../../rendu/polyset/subject"
         if [ -d "$src_subject_dir" ]; then
-            cp -r "$src_subject_dir"/* "$dest_dir/"
+            cp -r "$src_subject_dir" "$base_dir/../../rendu/polyset/"
         fi
     fi
 
@@ -107,7 +107,7 @@ while true; do
             ;;
         exit)
             echo "Exiting..."
-            exit 1
+            exit 0
             ;;
         *)
             echo "Please type 'test' to test code, 'next' for next or 'exit' for exit."
