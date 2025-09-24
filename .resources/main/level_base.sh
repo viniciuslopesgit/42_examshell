@@ -70,7 +70,7 @@ num=${#shuffled[@]}
 while true; do
     cd "../${shuffled[$i]}"
     mkdir -p "$base_dir/../../rendu/${shuffled[$i]}"
-    elif [[ "$rank" == "rank04" && "$level" == *"level2"* ]]; then
+    if [[ "$rank" == "rank04" && "$level" == *"level2"* ]]; then
         # For rank04 level2, copy the given.c file if it exists
         if [ -f "given.c" ]; then
             cp "given.c" "$base_dir/../../rendu/${shuffled[$i]}/given.c"
