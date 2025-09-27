@@ -1,4 +1,3 @@
-hello
 #!/bin/bash
 # === Colors ===
 RED="$(tput setaf 1)$(tput bold)"
