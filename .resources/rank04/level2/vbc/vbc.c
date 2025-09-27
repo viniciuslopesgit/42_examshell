@@ -1,13 +1,4 @@
-#include <unistd.h>
-#include <string.h>
-#include <stdlib.h>
-#include <stdio.h>
-#include <ctype.h>
-
-
-int ft_factor();
-int ft_product();
-int ft_sum();
+#include "vbc.h"
 
 char *s;
 

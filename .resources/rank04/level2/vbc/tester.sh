@@ -1,3 +1,4 @@
+hello
 #!/bin/bash
 # === Colors ===
 RED="$(tput setaf 1)$(tput bold)"
@@ -8,6 +9,13 @@ RESET="$(tput sgr0)"
 REF="vbc.c"
 USR="../../../../rendu/vbc/vbc.c"
 
+# Check for vbc.h in rendu/vbc
+HDR="../../../../rendu/vbc/vbc.h"
+if [ ! -f "$HDR" ]; then
+    echo "${RED}Missing vbc.h in rendu/vbc!${RESET}"
+    exit 1
+fi
+
 echo "${YELLOW}Compiling reference...${RESET}"
 if ! gcc -Wall -Wextra -Werror -o ref "$REF"; then
     echo "${RED}Reference compilation failed!${RESET}"
@@ -15,7 +23,8 @@ if ! gcc -Wall -Wextra -Werror -o ref "$REF"; then
 fi
 
 echo "${YELLOW}Compiling your version...${RESET}"
-if ! gcc -Wall -Wextra -Werror -o usr "$USR"; then
+# Compile user code with vbc.h if present
+if ! gcc -Wall -Wextra -Werror -o usr "$USR" "$HDR"; then
     echo "${RED}Your compilation failed!${RESET}"
     rm -f ref
     exit 1
