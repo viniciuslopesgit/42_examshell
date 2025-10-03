@@ -105,11 +105,11 @@ while true; do
                 echo -e "${GREEN}${BOLD}✔️  Passed!${RESET}"
                 rm -f "$subject_file"
                 sleep 1
-                exit 0
+          
             else
                 echo -e "${RED}${BOLD}❌  Failed.${RESET}"
                 sleep 1
-                exit 1
+          
             fi
             ;;
         next)
