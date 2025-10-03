@@ -10,7 +10,7 @@ base_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 # Centralized temp file to track subject
 subject_file="/tmp/.current_subject_${rank}_${level}"
 
-# Define subject pool using case statement instead of associative array
+# Define subject pool
 get_subjects() {
     case "$level" in
         level1)
@@ -25,6 +25,7 @@ get_subjects() {
     esac
 }
 
+# Pick a new random subject
 pick_new_subject() {
     subjects_list=$(get_subjects)
     IFS=' ' read -r -a qsub <<< "$subjects_list"
@@ -34,44 +35,38 @@ pick_new_subject() {
     echo "$chosen" > "$subject_file"
 }
 
+# Prepare the subject folder and files
 prepare_subject() {
     mkdir -p "$base_dir/../../rendu/$chosen"
-    
-    # Level2: create .c and .h only if missing
-    if [[ "$level" == "level2" ]]; then
-    # Create .c if it does not exist
-    if [ ! -f "$base_dir/../../rendu/$chosen/$chosen.c" ]; then
-        touch "$base_dir/../../rendu/$chosen/$chosen.c"
-    fi
 
-    # Create .h if it does not exist
-    if [ ! -f "$base_dir/../../rendu/$chosen/$chosen.h" ]; then
-        touch "$base_dir/../../rendu/$chosen/$chosen.h"
-    fi
-else
-    # Level1: create .cpp and .hpp (same as before)
-    if [ ! -f "$base_dir/../../rendu/$chosen/$chosen.cpp" ]; then
-        touch "$base_dir/../../rendu/$chosen/$chosen.cpp"
-    fi
-    if [ ! -f "$base_dir/../../rendu/$chosen/$chosen.hpp" ]; then
-        # Copy from source if it exists, else create empty
-        if [ -f "$base_dir/../rank05/$level/$chosen/$chosen.hpp" ]; then
-            cp "$base_dir/../rank05/$level/$chosen/$chosen.hpp" "$base_dir/../../rendu/$chosen/$chosen.hpp"
-        else
-            touch "$base_dir/../../rendu/$chosen/$chosen.hpp"
+    if [[ "$level" == "level2" ]]; then
+        # Level2 → create .c and .h only if missing
+        [ ! -f "$base_dir/../../rendu/$chosen/$chosen.c" ] && touch "$base_dir/../../rendu/$chosen/$chosen.c"
+        [ ! -f "$base_dir/../../rendu/$chosen/$chosen.h" ] && touch "$base_dir/../../rendu/$chosen/$chosen.h"
+    else
+        # Level1 → create .cpp and .hpp
+        [ ! -f "$base_dir/../../rendu/$chosen/$chosen.cpp" ] && touch "$base_dir/../../rendu/$chosen/$chosen.cpp"
+
+        if [ ! -f "$base_dir/../../rendu/$chosen/$chosen.hpp" ]; then
+            if [ -f "$base_dir/../rank05/$level/$chosen/$chosen.hpp" ]; then
+                cp "$base_dir/../rank05/$level/$chosen/$chosen.hpp" "$base_dir/../../rendu/$chosen/$chosen.hpp"
+            else
+                touch "$base_dir/../../rendu/$chosen/$chosen.hpp"
+            fi
         fi
     fi
-fi
 
-    # If polyset is selected for rank05 level1, copy subject folder files
+    # Special case: Polyset for rank05 level1
     if [[ "$rank" == "rank05" && "$level" == "level1" && "$chosen" == "polyset" ]]; then
         src_subject_dir="$base_dir/../rank05/level1/polyset/subject"
         dest_dir="$base_dir/../../rendu/polyset/subject"
         if [ -d "$src_subject_dir" ]; then
-            cp -r "$src_subject_dir" "$base_dir/../../rendu/polyset/"
+            mkdir -p "$dest_dir"
+            cp -r "$src_subject_dir" "$dest_dir"
         fi
     fi
 
+    # Go to the subject folder dynamically
     cd "$base_dir/../$rank/$level/$chosen" || {
         echo -e "${RED}Subject folder not found.${RESET}"
         exit 1

@@ -7,6 +7,7 @@ level=$2
 base_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 subject_file="/tmp/.current_subject_${rank}_${level}"
 
+# Get list of subjects based on level
 get_subjects() {
     case "$level" in
         level1)
@@ -21,56 +22,66 @@ get_subjects() {
     esac
 }
 
-subjects_list=$(get_subjects)
-IFS=' ' read -r -a qsub <<< "$subjects_list"
-count=${#qsub[@]}
-random_index=$(( RANDOM % count ))
-chosen="${qsub[$random_index]}"
-echo "$chosen" > "$subject_file"
+# Pick a random subject
+pick_subject() {
+    subjects_list=$(get_subjects)
+    IFS=' ' read -r -a qsub <<< "$subjects_list"
+    count=${#qsub[@]}
+    random_index=$(( RANDOM % count ))
+    chosen="${qsub[$random_index]}"
+    echo "$chosen" > "$subject_file"
+}
 
-# Ensure rendu folder exists
-mkdir -p "$base_dir/../../rendu/$chosen"
+# Setup files based on level
+setup_files() {
+    mkdir -p "$base_dir/../../rendu/$chosen"
 
-# Level2: create .c and .h only if missing
-if [[ "$level" == "level2" ]]; then
-    # Create .c if it does not exist
-    if [ ! -f "$base_dir/../../rendu/$chosen/$chosen.c" ]; then
-        touch "$base_dir/../../rendu/$chosen/$chosen.c"
-    fi
+    if [[ "$level" == "level2" ]]; then
+        # Level2 → create .c and .h only if missing
+        [ ! -f "$base_dir/../../rendu/$chosen/$chosen.c" ] && touch "$base_dir/../../rendu/$chosen/$chosen.c"
+        [ ! -f "$base_dir/../../rendu/$chosen/$chosen.h" ] && touch "$base_dir/../../rendu/$chosen/$chosen.h"
+    else
+        # Level1 → create .cpp and .hpp
+        [ ! -f "$base_dir/../../rendu/$chosen/$chosen.cpp" ] && touch "$base_dir/../../rendu/$chosen/$chosen.cpp"
 
-    # Create .h if it does not exist
-    if [ ! -f "$base_dir/../../rendu/$chosen/$chosen.h" ]; then
-        touch "$base_dir/../../rendu/$chosen/$chosen.h"
-    fi
-else
-    # Level1: create .cpp and .hpp (same as before)
-    if [ ! -f "$base_dir/../../rendu/$chosen/$chosen.cpp" ]; then
-        touch "$base_dir/../../rendu/$chosen/$chosen.cpp"
-    fi
-    if [ ! -f "$base_dir/../../rendu/$chosen/$chosen.hpp" ]; then
-        # Copy from source if it exists, else create empty
-        if [ -f "$base_dir/../rank05/$level/$chosen/$chosen.hpp" ]; then
-            cp "$base_dir/../rank05/$level/$chosen/$chosen.hpp" "$base_dir/../../rendu/$chosen/$chosen.hpp"
-        else
-            touch "$base_dir/../../rendu/$chosen/$chosen.hpp"
+        if [ ! -f "$base_dir/../../rendu/$chosen/$chosen.hpp" ]; then
+            if [ -f "$base_dir/../rank05/$level/$chosen/$chosen.hpp" ]; then
+                cp "$base_dir/../rank05/$level/$chosen/$chosen.hpp" "$base_dir/../../rendu/$chosen/$chosen.hpp"
+            else
+                touch "$base_dir/../../rendu/$chosen/$chosen.hpp"
+            fi
         fi
     fi
-fi
 
-# If polyset is selected for rank05 level1, copy subject folder files
-if [[ "$level" == "level1" && "$chosen" == "polyset" ]]; then
-    src_subject_dir="$base_dir/../rank05/level1/polyset/subject"
-    dest_dir="$base_dir/../../rendu/polyset"
-    if [ -d "$src_subject_dir" ]; then
-        mkdir -p "$dest_dir"
-        cp "$src_subject_dir"/* "$dest_dir"/
+    # Special case: Polyset for rank05 level1
+    if [[ "$level" == "level1" && "$chosen" == "polyset" ]]; then
+        src_subject_dir="$base_dir/../rank05/level1/polyset/subject"
+        dest_dir="$base_dir/../../rendu/polyset"
+        if [ -d "$src_subject_dir" ]; then
+            mkdir -p "$dest_dir"
+            cp "$src_subject_dir"/* "$dest_dir"/
+        fi
     fi
+}
+
+# Go to subject folder
+cd_subject() {
+    cd "$base_dir/../rank05/$level/$chosen" || {
+        echo -e "${RED}Subject folder not found.${RESET}"
+        exit 1
+    }
+}
+
+# Initial subject
+if [ -f "$subject_file" ]; then
+    chosen=$(cat "$subject_file")
+    echo -e "${BLUE}🔁 Resuming with previously chosen subject: $chosen${RESET}"
+else
+    pick_subject
 fi
 
-cd "$base_dir/../rank05/level1/$chosen" || {
-    echo -e "${RED}Subject folder not found.${RESET}"
-    exit 1
-}
+setup_files
+cd_subject
 
 clear
 echo -e "${CYAN}${BOLD}Your subject: $chosen${RESET}"
@@ -80,6 +91,7 @@ echo
 echo -e "=================================================="
 echo -e "${YELLOW}Type 'test' to test your code, 'next' to get a new question, or 'exit' to quit.${RESET}"
 
+# Command loop
 while true; do
     read -rp "/> " input
     case "$input" in
@@ -102,32 +114,9 @@ while true; do
             ;;
         next)
             echo -e "${BLUE}🔄 Picking a new subject...${RESET}"
-            subjects_list=$(get_subjects)
-            IFS=' ' read -r -a qsub <<< "$subjects_list"
-            count=${#qsub[@]}
-            random_index=$(( RANDOM % count ))
-            chosen="${qsub[$random_index]}"
-            echo "$chosen" > "$subject_file"
-            # Repeat setup for new subject
-            mkdir -p "$base_dir/../../rendu/$chosen"
-            touch "$base_dir/../../rendu/$chosen/$chosen.cpp"
-            if [ -f "$base_dir/../rank05/level1/$chosen/$chosen.hpp" ]; then
-                cp "$base_dir/../rank05/level1/$chosen/$chosen.hpp" "$base_dir/../../rendu/$chosen/$chosen.hpp"
-            else
-                touch "$base_dir/../../rendu/$chosen/$chosen.hpp"
-            fi
-            # If polyset is selected for rank05 level1, copy subject folder files
-                if [[ "$rank" == "rank05" && "$level" == "level1" && "$chosen" == "polyset" ]]; then
-                    src_subject_dir="$base_dir/../rank05/level1/polyset/subject"
-                    dest_dir="$base_dir/../../rendu/polyset/subject"
-                if [ -d "$src_subject_dir" ]; then
-                    cp -r "$src_subject_dir" "$base_dir/../../rendu/polyset/"
-                fi
-            fi
-            cd "$base_dir/../rank05/level1/$chosen" || {
-                echo -e "${RED}Subject folder not found.${RESET}"
-                exit 1
-            }
+            pick_subject
+            setup_files
+            cd_subject
             clear
             echo -e "${CYAN}${BOLD}Your subject: $chosen${RESET}"
             echo "=================================================="
