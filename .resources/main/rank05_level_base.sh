@@ -28,15 +28,32 @@ random_index=$(( RANDOM % count ))
 chosen="${qsub[$random_index]}"
 echo "$chosen" > "$subject_file"
 
+# Ensure rendu folder exists
 mkdir -p "$base_dir/../../rendu/$chosen"
-touch "$base_dir/../../rendu/$chosen/$chosen.cpp"
 
-# Copy the .hpp file from the question folder to rendu
-if [ ! -f "$base_dir/../../rendu/$chosen/$chosen.hpp" ]; then
-    if [ -f "$base_dir/../rank05/level1/$chosen/$chosen.hpp" ]; then
-        cp "$base_dir/../rank05/level1/$chosen/$chosen.hpp" "$base_dir/../../rendu/$chosen/$chosen.hpp"
-    else
-        touch "$base_dir/../../rendu/$chosen/$chosen.hpp"
+# Level2: create .c and .h only if missing
+if [[ "$level" == "level2" ]]; then
+    # Create .c if it does not exist
+    if [ ! -f "$base_dir/../../rendu/$chosen/$chosen.c" ]; then
+        touch "$base_dir/../../rendu/$chosen/$chosen.c"
+    fi
+
+    # Create .h if it does not exist
+    if [ ! -f "$base_dir/../../rendu/$chosen/$chosen.h" ]; then
+        touch "$base_dir/../../rendu/$chosen/$chosen.h"
+    fi
+else
+    # Level1: create .cpp and .hpp (same as before)
+    if [ ! -f "$base_dir/../../rendu/$chosen/$chosen.cpp" ]; then
+        touch "$base_dir/../../rendu/$chosen/$chosen.cpp"
+    fi
+    if [ ! -f "$base_dir/../../rendu/$chosen/$chosen.hpp" ]; then
+        # Copy from source if it exists, else create empty
+        if [ -f "$base_dir/../rank05/$level/$chosen/$chosen.hpp" ]; then
+            cp "$base_dir/../rank05/$level/$chosen/$chosen.hpp" "$base_dir/../../rendu/$chosen/$chosen.hpp"
+        else
+            touch "$base_dir/../../rendu/$chosen/$chosen.hpp"
+        fi
     fi
 fi
 
