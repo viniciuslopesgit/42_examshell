@@ -36,16 +36,32 @@ pick_new_subject() {
 
 prepare_subject() {
     mkdir -p "$base_dir/../../rendu/$chosen"
-    touch "$base_dir/../../rendu/$chosen/$chosen.cpp"
+    
+    # Level2: create .c and .h only if missing
+    if [[ "$level" == "level2" ]]; then
+    # Create .c if it does not exist
+    if [ ! -f "$base_dir/../../rendu/$chosen/$chosen.c" ]; then
+        touch "$base_dir/../../rendu/$chosen/$chosen.c"
+    fi
 
-    # Copy the .hpp file from the question folder to rendu only if it does not already exist
+    # Create .h if it does not exist
+    if [ ! -f "$base_dir/../../rendu/$chosen/$chosen.h" ]; then
+        touch "$base_dir/../../rendu/$chosen/$chosen.h"
+    fi
+else
+    # Level1: create .cpp and .hpp (same as before)
+    if [ ! -f "$base_dir/../../rendu/$chosen/$chosen.cpp" ]; then
+        touch "$base_dir/../../rendu/$chosen/$chosen.cpp"
+    fi
     if [ ! -f "$base_dir/../../rendu/$chosen/$chosen.hpp" ]; then
-        if [ -f "$base_dir/../$rank/$level/$chosen/$chosen.hpp" ]; then
-            cp "$base_dir/../$rank/$level/$chosen/$chosen.hpp" "$base_dir/../../rendu/$chosen/$chosen.hpp"
+        # Copy from source if it exists, else create empty
+        if [ -f "$base_dir/../rank05/$level/$chosen/$chosen.hpp" ]; then
+            cp "$base_dir/../rank05/$level/$chosen/$chosen.hpp" "$base_dir/../../rendu/$chosen/$chosen.hpp"
         else
             touch "$base_dir/../../rendu/$chosen/$chosen.hpp"
         fi
     fi
+fi
 
     # If polyset is selected for rank05 level1, copy subject folder files
     if [[ "$rank" == "rank05" && "$level" == "level1" && "$chosen" == "polyset" ]]; then
