@@ -40,6 +40,8 @@ prepare_subject() {
     # Create appropriate files based on subject requirements
     case $chosen in
         "broken_gnl")
+            [ ! -f "$base_dir/../../rendu/$chosen/broken_gnl.c" ] && \
+                cp "$base_dir/../$rank/$level/broken_gnl/broken_gnl.c" "$base_dir/../../rendu/$chosen/broken_gnl.c"
             touch "$base_dir/../../rendu/$chosen/get_next_line.c"
             touch "$base_dir/../../rendu/$chosen/get_next_line.h"
             ;;

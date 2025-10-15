@@ -22,9 +22,9 @@ if [[ "$rank" == "rank02" ]]; then
     fi
 elif [[ "$rank" == "rank03" ]]; then
     if [[ "$level" == *"level1"* ]]; then
-        qsub=(broken_gnl  filter  scanf)
+        qsub=(broken_gnl filter scanf)
     elif [[ "$level" == *"level2"* ]]; then
-        qsub=(n_queens  permutations	powerset  rip  tsp)
+        qsub=(n_queens permutations powerset rip tsp)
     else
         echo "Invalid level: $level for rank03"
         exit 1
@@ -43,8 +43,7 @@ else
     exit 1
 fi
 
-# Shuffle questions randomly
-# Shuffle array manually if shuf is unavailable
+# Shuffle questions manually
 shuffle_array() {
     local i tmp size max rand
     size=${#qsub[*]}
@@ -62,27 +61,32 @@ shuffle_array() {
 
 shuffle_array
 num=${#shuffled[@]}
-#set -x
-
 i=0
 cd "../$rank/$level/${shuffled[$i]}"
-num=${#shuffled[@]}
+
 while true; do
     cd "../${shuffled[$i]}"
     mkdir -p "$base_dir/../../rendu/${shuffled[$i]}"
-    if [[ "$rank" == "rank04" && "$level" == *"level2"* ]]; then
-        # For rank04 level2, copy the given.c file if it exists
+
+    # Copy question files if needed
+    if [[ "$rank" == "rank03" && "$level" == *"level1"* ]]; then
+        if [ -f "broken_gnl.c" ]; then
+            cp "broken_gnl.c" "$base_dir/../../rendu/${shuffled[$i]}/broken_gnl.c"
+        fi
+    elif [[ "$rank" == "rank04" && "$level" == *"level2"* ]]; then
         if [ -f "given.c" ]; then
             cp "given.c" "$base_dir/../../rendu/${shuffled[$i]}/given.c"
         fi
-        touch "$base_dir/../../rendu/${shuffled[$i]}/${shuffled[$i]}.c"
-    else
-        touch "$base_dir/../../rendu/${shuffled[$i]}/${shuffled[$i]}.c"
     fi
-    
+
+    # Ensure .c file exists for the question
+    touch "$base_dir/../../rendu/${shuffled[$i]}/${shuffled[$i]}.c"
+
     subject=$(cat sub.txt)
-    if [ $i -eq $(($num)) ]; then
-    clear
+
+    # Check if all questions are completed
+    if [ $i -ge $num ]; then
+        clear
         echo "These questions at $level are completed."
         echo "=============================================="
         read -rp "${GREEN}${BOLD}Please press enter for return to the menu.${RESET}" enterx
@@ -91,6 +95,8 @@ while true; do
         bash menu.sh
         exit
     fi
+
+    # Inner loop for testing or navigating
     while true; do
         clear
         echo -e "${WHITE}$subject${RESET}"
@@ -110,16 +116,17 @@ while true; do
                 slept=0
 
                 while [ $slept -lt 10 ] && kill -0 $pid 2>/dev/null; do
-                sleep 1
-                slept=$((slept+1))
+                    sleep 1
+                    slept=$((slept+1))
                 done
 
                 if kill -0 $pid 2>/dev/null; then
-                echo "$(tput setaf 1)$(tput bold)TIMEOUT$(tput sgr 0)"
-                echo "It can be because of infinite loop ∞"
-                echo "Please check your code or just try again."
-                kill $pid 2>/dev/null
+                    echo "$(tput setaf 1)$(tput bold)TIMEOUT$(tput sgr 0)"
+                    echo "It can be because of infinite loop ∞"
+                    echo "Please check your code or just try again."
+                    kill $pid 2>/dev/null
                 fi
+
                 echo "=============================================="
                 read -rp "${GREEN}${BOLD}Please press enter to continue your practice.${RESET}" enter
                 break
@@ -144,9 +151,9 @@ while true; do
                 fi
                 exit 1
                 ;;
-      	    *)
-    		echo "Please type 'test' to test code, 'next' for next or 'exit' to quit."
-    		;;
+            *)
+                echo "Please type 'test' to test code, 'next' for next or 'exit' to quit."
+                ;;
         esac
-    done   
+    done
 done
