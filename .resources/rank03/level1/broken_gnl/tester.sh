@@ -26,6 +26,7 @@ cat > test_main.c << 'EOF'
 #include <fcntl.h>
 #include <unistd.h>
 #include <stdlib.h>
+#include <string.h>
 #include "get_next_line.h"
 
 int main(int argc, char **argv)
