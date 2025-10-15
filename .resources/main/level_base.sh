@@ -68,19 +68,19 @@ while true; do
     cd "../${shuffled[$i]}"
     mkdir -p "$base_dir/../../rendu/${shuffled[$i]}"
 
-    # Copy question files if needed
-    if [[ "$rank" == "rank03" && "$level" == *"level1"* ]]; then
-        if [ -f "broken_gnl.c" ]; then
-            cp "broken_gnl.c" "$base_dir/../../rendu/${shuffled[$i]}/broken_gnl.c"
-        fi
-    elif [[ "$rank" == "rank04" && "$level" == *"level2"* ]]; then
-        if [ -f "given.c" ]; then
-            cp "given.c" "$base_dir/../../rendu/${shuffled[$i]}/given.c"
-        fi
-        touch "$base_dir/../../rendu/${shuffled[$i]}/${shuffled[$i]}.c"
-    else
-        touch "$base_dir/../../rendu/${shuffled[$i]}/${shuffled[$i]}.c"
+   # Copy question files if needed
+if [[ "$rank" == "rank03" && "$level" == *"level1"* ]]; then
+    if [ -f "broken_gnl.c" ]; then
+        cp "broken_gnl.c" "$base_dir/../../rendu/${shuffled[$i]}/broken_gnl.c"
     fi
+elif [[ "$rank" == "rank04" && "$level" == *"level2"* ]]; then
+    if [ -f "given.c" ]; then
+        cp "given.c" "$base_dir/../../rendu/${shuffled[$i]}/given.c"
+    fi
+    touch "$base_dir/../../rendu/${shuffled[$i]}/${shuffled[$i]}.c"
+else
+    touch "$base_dir/../../rendu/${shuffled[$i]}/${shuffled[$i]}.c"
+fi
 
     subject=$(cat sub.txt)
 
