@@ -77,10 +77,10 @@ while true; do
         if [ -f "given.c" ]; then
             cp "given.c" "$base_dir/../../rendu/${shuffled[$i]}/given.c"
         fi
+        touch "$base_dir/../../rendu/${shuffled[$i]}/${shuffled[$i]}.c"
+    else
+        touch "$base_dir/../../rendu/${shuffled[$i]}/${shuffled[$i]}.c"
     fi
-
-    # Ensure .c file exists for the question
-    touch "$base_dir/../../rendu/${shuffled[$i]}/${shuffled[$i]}.c"
 
     subject=$(cat sub.txt)
 

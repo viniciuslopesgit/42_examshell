@@ -189,7 +189,7 @@ char *get_next_line(int fd)
     }
 
 }
-
+/*
 // Main no incluido, lo tenemos que generar para testear pero NO hay que entregarlo
 // No pide un programa, usaran su propio main()
 int main(int argc, char **argv)
@@ -220,4 +220,4 @@ int main(int argc, char **argv)
 
     close(fd);
     return 0;
-}
+}*/

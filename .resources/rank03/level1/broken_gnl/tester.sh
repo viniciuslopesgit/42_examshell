@@ -18,7 +18,7 @@ echo -e "Line 1\nLine 2\nLine 3" > test1.txt
 echo -e "Single line" > test2.txt
 echo -e "Empty\n\nLines" > test3.txt
 echo -e "No newline at end" > test4.txt
-echo "" > empty.txt
+truncate -s 0 empty.txt
 
 # Create test program
 cat > test_main.c << 'EOF'
